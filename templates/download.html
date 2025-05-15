@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="it" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download ZIP Processor - Interfaccia 3D</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .content-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            z-index: 1;
+        }
+        
+        .navbar {
+            background-color: rgba(20, 20, 20, 0.8) !important;
+            backdrop-filter: blur(10px);
+        }
+        
+        .content-section {
+            padding: 80px 0;
+        }
+        
+        .hero-section {
+            padding-top: 120px;
+            padding-bottom: 80px;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-shadow: 0 0 15px rgba(0, 150, 255, 0.7);
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(0, 150, 255, 0.5);
+        }
+        
+        .card {
+            background-color: rgba(30, 30, 30, 0.8);
+            border: none;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .download-btn {
+            margin-top: 15px;
+            padding: 10px 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .instruction-section {
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+        
+        .footer {
+            background-color: rgba(10, 10, 10, 0.8);
+            padding: 30px 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .transparent-bg {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <div class="content-wrapper">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand fw-bold" href="/">
+                    <i class="fas fa-file-archive me-2"></i>
+                    ZIP Media Separator
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/download-app">
+                                <i class="fas fa-download me-1"></i> Download
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10 transparent-bg">
+                        <h1 class="hero-title">ZIP Media Separator</h1>
+                        <p class="hero-subtitle">Separa i tuoi file ZIP per tipo di media con un solo click</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Download Section -->
+        <section class="content-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="row justify-content-center">
+                            <div class="col-md-5 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body text-center py-5">
+                                        <i class="fas fa-desktop mb-3" style="font-size: 3rem; color: #DB4437;"></i>
+                                        <h4 class="card-title">Versione Desktop GUI</h4>
+                                        <p class="card-text">Interfaccia grafica per processare file ZIP. Richiede Python installato sul computer.</p>
+                                        <a href="/static/downloads/ZIP_Processor_GUI.zip" class="btn btn-danger download-btn w-75" download>
+                                            <i class="fas fa-download me-2"></i> Download GUI
+                                        </a>
+                                        <p class="mt-3 small text-success fw-bold">CONSIGLIATO</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-5 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body text-center py-5">
+                                        <i class="fas fa-terminal mb-3" style="font-size: 3rem; color: #0F9D58;"></i>
+                                        <h4 class="card-title">Versione a Riga di Comando</h4>
+                                        <p class="card-text">Processore ZIP da riga di comando per utilizzo avanzato. Richiede Python installato.</p>
+                                        <a href="/static/downloads/ZIP_Processor_CLI.zip" class="btn btn-success download-btn w-75" download>
+                                            <i class="fas fa-code me-2"></i> Download CLI
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Instructions Section -->
+        <section class="content-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="instruction-section">
+                            <h2 class="text-center mb-4">Istruzioni</h2>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title mb-4"><i class="fas fa-cogs me-2"></i>Requisiti</h5>
+                                            
+                                            <div class="mb-3">
+                                                <i class="fas fa-check-circle text-success me-2"></i>
+                                                Python 3.6 o superiore
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <i class="fas fa-check-circle text-success me-2"></i>
+                                                tkinter (pre-installato con Python) per la versione GUI
+                                            </div>
+                                            
+                                            <div class="mb-4">
+                                                <i class="fas fa-check-circle text-success me-2"></i>
+                                                python-magic (opzionale): <code class="text-danger">pip install python-magic</code>
+                                            </div>
+                                            
+                                            <div class="mt-4 mb-3">
+                                                <strong class="text-primary">Come installare Python:</strong>
+                                            </div>
+                                            
+                                            <div class="p-3 border border-success rounded bg-dark text-white">
+                                                <p class="mb-3">Per installare <span class="fw-bold text-success">GRATUITAMENTE</span> Python:</p>
+                                                
+                                                <p class="mb-3">Clicca su Download Python 3.x.x (la versione più recente) dal sito ufficiale.</p>
+                                                
+                                                <p class="mb-1">Molto importante: nella schermata di installazione, spunta la casella</p>
+                                                <p class="fs-5 mb-2 text-center text-success">✅ "Add Python to PATH"</p>
+                                                <p class="mb-3">prima di cliccare su "Install Now".</p>
+                                                
+                                                <p class="mb-0 fw-bold">Una volta installato, avvia il file start.gui</p>
+                                            </div>
+                                            
+
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><i class="fas fa-play-circle me-2"></i>Esecuzione</h5>
+                                            <ul class="list-unstyled mt-3">
+                                                <li class="mb-3">
+                                                    <strong>Versione Web:</strong><br>
+                                                    <code class="bg-dark p-2 d-block mt-2 rounded">Apri il file HTML scaricato in un browser qualsiasi</code>
+                                                </li>
+                                                <li class="mb-3">
+                                                    <strong>Versione GUI:</strong><br>
+                                                    <code class="bg-dark p-2 d-block mt-2 rounded">Estrai ZIP e fai doppio click su start_gui.bat (Windows) o start_gui.sh (Mac/Linux)</code>
+                                                </li>
+                                                <li>
+                                                    <strong>Versione CLI:</strong><br>
+                                                    <code class="bg-dark p-2 d-block mt-2 rounded">Estrai ZIP e usa process_zip.bat file.zip (Windows) o ./process_zip.sh file.zip (Mac/Linux)</code>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Features Section -->
+        <section class="content-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <h2 class="text-center mb-5">Funzionalità</h2>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body text-center py-4">
+                                        <i class="fas fa-image mb-3" style="font-size: 2.5rem; color: #4285F4;"></i>
+                                        <h5 class="card-title">Separazione Immagini</h5>
+                                        <p class="card-text">Estrae e raggruppa tutti i file immagine (JPG, PNG, GIF, SVG, ecc.) in un unico ZIP.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body text-center py-4">
+                                        <i class="fas fa-music mb-3" style="font-size: 2.5rem; color: #DB4437;"></i>
+                                        <h5 class="card-title">Separazione Audio</h5>
+                                        <p class="card-text">Raccoglie tutti i file audio (MP3, WAV, FLAC, ecc.) in un archivio dedicato.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body text-center py-4">
+                                        <i class="fas fa-video mb-3" style="font-size: 2.5rem; color: #F4B400;"></i>
+                                        <h5 class="card-title">Separazione Video</h5>
+                                        <p class="card-text">Organizza tutti i file video (MP4, AVI, MKV, ecc.) in un file ZIP separato.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <p>ZIP Media Separator &copy; 2025 - Tutti i diritti riservati</p>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Three.js Animation -->
+    <script>
+        // Inizializzazione di Three.js
+        let scene, camera, renderer;
+        let cubes = [];
+        let particleSystem;
+        
+        function init() {
+            // Creazione della scena
+            scene = new THREE.Scene();
+            
+            // Creazione della camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 30;
+            
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000814, 1);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+            
+            // Luci
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+            
+            const pointLight = new THREE.PointLight(0x4285F4, 2, 100);
+            pointLight.position.set(10, 10, 10);
+            scene.add(pointLight);
+            
+            const pointLight2 = new THREE.PointLight(0x0F9D58, 2, 100);
+            pointLight2.position.set(-10, -10, 10);
+            scene.add(pointLight2);
+            
+            // Cubo per rappresentare un file ZIP
+            createCubes();
+            
+            // Sistema di particelle
+            createParticleSystem();
+            
+            // Event listener per ridimensionamento finestra
+            window.addEventListener('resize', onWindowResize, false);
+            
+            // Avvia l'animazione
+            animate();
+        }
+        
+        function createCubes() {
+            // Materiali per diversi tipi di file
+            const materials = [
+                new THREE.MeshPhongMaterial({ color: 0x4285F4, flatShading: true }), // Blu - immagini
+                new THREE.MeshPhongMaterial({ color: 0xDB4437, flatShading: true }), // Rosso - video
+                new THREE.MeshPhongMaterial({ color: 0xF4B400, flatShading: true }), // Giallo - audio
+                new THREE.MeshPhongMaterial({ color: 0x0F9D58, flatShading: true })  // Verde - altri
+            ];
+            
+            // Crea diversi cubi
+            for (let i = 0; i < 20; i++) {
+                const cubeGeometry = new THREE.BoxGeometry(2, 2, 2);
+                const material = materials[Math.floor(Math.random() * materials.length)];
+                const cube = new THREE.Mesh(cubeGeometry, material);
+                
+                // Posizione casuale
+                cube.position.x = (Math.random() - 0.5) * 40;
+                cube.position.y = (Math.random() - 0.5) * 40;
+                cube.position.z = (Math.random() - 0.5) * 40;
+                
+                // Rotazione casuale
+                cube.rotation.x = Math.random() * Math.PI;
+                cube.rotation.y = Math.random() * Math.PI;
+                
+                // Velocità di rotazione casuale
+                cube.userData = {
+                    rotationSpeed: {
+                        x: (Math.random() - 0.5) * 0.02,
+                        y: (Math.random() - 0.5) * 0.02
+                    }
+                };
+                
+                scene.add(cube);
+                cubes.push(cube);
+            }
+        }
+        
+        function createParticleSystem() {
+            // Geometria delle particelle
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particleCount = 1000;
+            
+            const positions = new Float32Array(particleCount * 3);
+            
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                positions[i3] = (Math.random() - 0.5) * 50;
+                positions[i3 + 1] = (Math.random() - 0.5) * 50;
+                positions[i3 + 2] = (Math.random() - 0.5) * 50;
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            
+            // Materiale delle particelle
+            const particlesMaterial = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 0.1,
+                transparent: true,
+                opacity: 0.5
+            });
+            
+            // Sistema di particelle
+            particleSystem = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particleSystem);
+        }
+        
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Rotazione dei cubi
+            cubes.forEach(cube => {
+                cube.rotation.x += cube.userData.rotationSpeed.x;
+                cube.rotation.y += cube.userData.rotationSpeed.y;
+            });
+            
+            // Rotazione lenta della telecamera
+            camera.position.x = 30 * Math.sin(Date.now() * 0.0001);
+            camera.position.z = 30 * Math.cos(Date.now() * 0.0001);
+            camera.lookAt(scene.position);
+            
+            // Rotazione del sistema di particelle
+            particleSystem.rotation.y += 0.001;
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Inizializza la scena quando la pagina è caricata
+        window.onload = init;
+    </script>
+</body>
+</html>

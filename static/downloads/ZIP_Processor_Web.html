@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZIP Media Separator - Web Version</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background-color: #343a40 !important;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin-top: 2rem;
+        }
+        
+        .card {
+            background-color: #2c2c2c;
+            border: none;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-header {
+            background-color: #343a40;
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .btn-primary {
+            background-color: #0d6efd;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+        }
+        
+        .processing-panel {
+            display: none;
+        }
+        
+        .result-panel {
+            display: none;
+        }
+        
+        .drop-zone {
+            border: 2px dashed #6c757d;
+            border-radius: 5px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .drop-zone:hover {
+            border-color: #0d6efd;
+            background-color: rgba(13, 110, 253, 0.05);
+        }
+        
+        .drop-zone-active {
+            border-color: #0d6efd;
+            background-color: rgba(13, 110, 253, 0.1);
+        }
+        
+        .preview-item {
+            background-color: #343a40;
+            border-radius: 5px;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress {
+            height: 25px;
+            background-color: #343a40;
+        }
+        
+        .footer {
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid #343a40;
+            text-align: center;
+            color: #6c757d;
+        }
+        
+        .file-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-file-archive me-2"></i>
+                ZIP Media Separator
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#infoModal">Info</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <!-- Main Content -->
+        <div class="main-panel">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-upload me-2"></i> Carica il tuo file ZIP
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>Questo strumento ti permette di:</h5>
+                            <ul class="list-group list-group-flush bg-transparent">
+                                <li class="list-group-item bg-transparent text-light">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Separare i file all'interno di un archivio ZIP per tipo di media
+                                </li>
+                                <li class="list-group-item bg-transparent text-light">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Suddividere in categorie: immagini, audio, video, altri
+                                </li>
+                                <li class="list-group-item bg-transparent text-light">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Scaricare ogni categoria come file ZIP separato
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="drop-zone w-100" id="drop-zone">
+                                <i class="fas fa-file-archive file-icon text-primary"></i>
+                                <h5>Trascina qui il tuo file ZIP</h5>
+                                <p class="mb-2">oppure</p>
+                                <button class="btn btn-primary" id="select-file-btn">
+                                    <i class="fas fa-folder-open me-2"></i> Seleziona file
+                                </button>
+                                <input type="file" id="file-input" accept=".zip" style="display: none;" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="file-preview" class="mt-3" style="display: none;">
+                        <h5>File selezionato:</h5>
+                        <div class="preview-item" id="preview-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-file-archive me-2 text-primary"></i>
+                                    <span id="file-name"></span>
+                                    <small class="text-muted ms-2" id="file-size"></small>
+                                </div>
+                                <button class="btn btn-sm btn-danger" id="remove-file-btn">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-3">
+                            <button class="btn btn-primary" id="process-btn">
+                                <i class="fas fa-cogs me-2"></i> Processa file ZIP
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-info-circle me-2"></i> Formati supportati
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h6 class="text-primary">
+                                <i class="fas fa-image me-2"></i> Immagini
+                            </h6>
+                            <p class="small">
+                                JPG/JPEG, PNG, GIF, BMP, WebP, SVG, TIFF
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="text-danger">
+                                <i class="fas fa-music me-2"></i> Audio
+                            </h6>
+                            <p class="small">
+                                MP3, WAV, OGG, AAC, FLAC, AIFF, WMA
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="text-warning">
+                                <i class="fas fa-video me-2"></i> Video
+                            </h6>
+                            <p class="small">
+                                MP4, AVI, MOV, WMV, MKV, WebM, 3GP
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Processing Panel -->
+        <div class="processing-panel" id="processing-panel">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-spinner fa-spin me-2"></i> Elaborazione in corso
+                </div>
+                <div class="card-body">
+                    <h5 class="text-center mb-3" id="processing-status">Analisi del file ZIP...</h5>
+                    
+                    <div class="progress mb-3">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" id="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                    </div>
+                    
+                    <div id="processing-details" class="mt-4">
+                        <p id="processing-message">Inizializzazione dell'elaborazione...</p>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button class="btn btn-secondary" id="cancel-btn">
+                            <i class="fas fa-times me-2"></i> Annulla
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results Panel -->
+        <div class="result-panel" id="result-panel">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-check-circle text-success me-2"></i> Elaborazione completata
+                </div>
+                <div class="card-body">
+                    <h5 class="text-center mb-4">File elaborati con successo</h5>
+                    
+                    <div class="row" id="result-containers">
+                        <!-- Will be filled dynamically -->
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button class="btn btn-primary" id="process-new-btn">
+                            <i class="fas fa-upload me-2"></i> Processa un altro file
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>ZIP Media Separator - Web Version &copy; 2025</p>
+            <p class="small">Eseguito interamente nel browser. Nessun dato viene caricato su server esterni.</p>
+        </div>
+    </div>
+    
+    <!-- Info Modal -->
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-info-circle me-2"></i> Informazioni
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4>Come funziona?</h4>
+                    <p>
+                        Questa è una versione web del programma ZIP Media Separator, che funziona
+                        completamente all'interno del tuo browser. Non è necessario installare nulla e
+                        nessun dato viene caricato su server esterni - tutto avviene localmente sul tuo dispositivo.
+                    </p>
+                    
+                    <h5 class="mt-4">Processo:</h5>
+                    <ol>
+                        <li>Seleziona un file ZIP dal tuo computer</li>
+                        <li>Il file viene elaborato nel browser (può richiedere tempo per file grandi)</li>
+                        <li>I file vengono suddivisi in categorie: immagini, audio, video, altri</li>
+                        <li>Vengono creati nuovi file ZIP per ogni categoria</li>
+                        <li>Puoi scaricare i file ZIP risultanti sul tuo computer</li>
+                    </ol>
+                    
+                    <h5 class="mt-4">Limitazioni:</h5>
+                    <ul>
+                        <li>File molto grandi (>500MB) potrebbero causare problemi di memoria nel browser</li>
+                        <li>La classificazione dei file si basa principalmente sulle estensioni</li>
+                        <li>File danneggiati o protetti da password non possono essere elaborati</li>
+                    </ul>
+                    
+                    <h5 class="mt-4">Privacy:</h5>
+                    <p>
+                        Questo strumento utilizza l'API Web FileSystem del tuo browser per elaborare i file.
+                        I tuoi file rimangono sul tuo dispositivo e non vengono caricati su nessun server.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JSZip library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <!-- FileSaver.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    <script>
+        // App main code
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const dropZone = document.getElementById('drop-zone');
+            const fileInput = document.getElementById('file-input');
+            const selectFileBtn = document.getElementById('select-file-btn');
+            const removeFileBtn = document.getElementById('remove-file-btn');
+            const processBtn = document.getElementById('process-btn');
+            const filePreview = document.getElementById('file-preview');
+            const fileName = document.getElementById('file-name');
+            const fileSize = document.getElementById('file-size');
+            const mainPanel = document.querySelector('.main-panel');
+            const processingPanel = document.getElementById('processing-panel');
+            const resultPanel = document.getElementById('result-panel');
+            const progressBar = document.getElementById('progress-bar');
+            const processingStatus = document.getElementById('processing-status');
+            const processingMessage = document.getElementById('processing-message');
+            const resultContainers = document.getElementById('result-containers');
+            const processNewBtn = document.getElementById('process-new-btn');
+            const cancelBtn = document.getElementById('cancel-btn');
+            
+            // File categories and extensions
+            const fileCategories = {
+                'images': {
+                    extensions: ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.tiff', '.svg'],
+                    icon: 'fa-image',
+                    color: 'primary',
+                    title: 'Immagini'
+                },
+                'audio': {
+                    extensions: ['.mp3', '.wav', '.ogg', '.aac', '.flac', '.aiff', '.wma', '.m4a'],
+                    icon: 'fa-music',
+                    color: 'danger',
+                    title: 'Audio'
+                },
+                'video': {
+                    extensions: ['.mp4', '.avi', '.mov', '.wmv', '.mkv', '.webm', '.flv', '.3gp', '.m4v'],
+                    icon: 'fa-video',
+                    color: 'warning',
+                    title: 'Video'
+                },
+                'others': {
+                    extensions: [],
+                    icon: 'fa-file',
+                    color: 'info',
+                    title: 'Altri Files'
+                }
+            };
+            
+            // Variables
+            let selectedFile = null;
+            let processing = false;
+            let categorizedFiles = {
+                'images': [],
+                'audio': [],
+                'video': [],
+                'others': []
+            };
+            let resultZips = {};
+            let worker = null;
+            
+            // Event Listeners
+            selectFileBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFile(e.target.files[0]);
+                }
+            });
+            
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('drop-zone-active');
+            });
+            
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('drop-zone-active');
+            });
+            
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('drop-zone-active');
+                
+                if (e.dataTransfer.files.length > 0) {
+                    const file = e.dataTransfer.files[0];
+                    if (file.name.toLowerCase().endsWith('.zip')) {
+                        handleFile(file);
+                    } else {
+                        alert('Per favore seleziona un file ZIP.');
+                    }
+                }
+            });
+            
+            removeFileBtn.addEventListener('click', () => {
+                clearSelectedFile();
+            });
+            
+            processBtn.addEventListener('click', () => {
+                if (selectedFile) {
+                    startProcessing();
+                }
+            });
+            
+            processNewBtn.addEventListener('click', () => {
+                resetApp();
+            });
+            
+            cancelBtn.addEventListener('click', () => {
+                if (confirm('Sei sicuro di voler annullare l\'elaborazione?')) {
+                    if (worker) {
+                        worker.terminate();
+                        worker = null;
+                    }
+                    processing = false;
+                    resetApp();
+                }
+            });
+            
+            // Functions
+            function handleFile(file) {
+                if (!file.name.toLowerCase().endsWith('.zip')) {
+                    alert('Per favore seleziona un file ZIP.');
+                    return;
+                }
+                
+                selectedFile = file;
+                fileName.textContent = file.name;
+                fileSize.textContent = formatFileSize(file.size);
+                filePreview.style.display = 'block';
+            }
+            
+            function clearSelectedFile() {
+                selectedFile = null;
+                fileInput.value = '';
+                filePreview.style.display = 'none';
+            }
+            
+            function formatFileSize(bytes) {
+                const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+                if (bytes === 0) return '0 Byte';
+                const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+                return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+            }
+            
+            function startProcessing() {
+                processing = true;
+                mainPanel.style.display = 'none';
+                processingPanel.style.display = 'block';
+                resultPanel.style.display = 'none';
+                
+                // Reset categorized files
+                for (const category in categorizedFiles) {
+                    categorizedFiles[category] = [];
+                }
+                
+                // Reset result zips
+                resultZips = {};
+                
+                // Process the ZIP file
+                processZipFile(selectedFile);
+            }
+            
+            function processZipFile(file) {
+                updateProgress(5, 'Lettura del file ZIP...');
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    updateProgress(10, 'File caricato, estrazione dei contenuti...');
+                    
+                    // Use JSZip to unzip the file
+                    JSZip.loadAsync(e.target.result)
+                        .then(function(zip) {
+                            updateProgress(30, 'Contenuti estratti, analisi dei file...');
+                            
+                            // Get all files from the zip
+                            const totalFiles = Object.keys(zip.files).length;
+                            let processedFiles = 0;
+                            
+                            // Process each file
+                            const promises = [];
+                            
+                            Object.keys(zip.files).forEach(function(filename) {
+                                const zipEntry = zip.files[filename];
+                                
+                                // Skip directories
+                                if (zipEntry.dir) {
+                                    processedFiles++;
+                                    return;
+                                }
+                                
+                                // Get the file extension
+                                const fileExt = getFileExtension(filename);
+                                
+                                // Determine the category
+                                const category = getCategoryFromExtension(fileExt);
+                                
+                                // Read the file content
+                                const promise = zipEntry.async('arraybuffer').then(function(content) {
+                                    // Add to the corresponding category
+                                    categorizedFiles[category].push({
+                                        name: filename,
+                                        content: content
+                                    });
+                                    
+                                    // Update progress
+                                    processedFiles++;
+                                    const progress = 30 + Math.round((processedFiles / totalFiles) * 30);
+                                    updateProgress(progress, `Analisi dei file: ${processedFiles}/${totalFiles}`);
+                                });
+                                
+                                promises.push(promise);
+                            });
+                            
+                            // When all files are processed
+                            return Promise.all(promises).then(function() {
+                                updateProgress(70, 'Creazione dei file ZIP per categoria...');
+                                return createResultZips();
+                            });
+                        })
+                        .then(function() {
+                            updateProgress(100, 'Elaborazione completata!');
+                            showResults();
+                        })
+                        .catch(function(error) {
+                            console.error('Error processing ZIP file:', error);
+                            alert('Si è verificato un errore durante l\'elaborazione del file ZIP: ' + error.message);
+                            resetApp();
+                        });
+                };
+                
+                reader.onerror = function() {
+                    alert('Si è verificato un errore durante la lettura del file.');
+                    resetApp();
+                };
+                
+                reader.readAsArrayBuffer(file);
+            }
+            
+            function getFileExtension(filename) {
+                return '.' + filename.split('.').pop().toLowerCase();
+            }
+            
+            function getCategoryFromExtension(ext) {
+                for (const category in fileCategories) {
+                    if (fileCategories[category].extensions.includes(ext)) {
+                        return category;
+                    }
+                }
+                return 'others';
+            }
+            
+            function createResultZips() {
+                const promises = [];
+                
+                for (const category in categorizedFiles) {
+                    if (categorizedFiles[category].length > 0) {
+                        const promise = createCategoryZip(category, categorizedFiles[category]);
+                        promises.push(promise);
+                    }
+                }
+                
+                return Promise.all(promises);
+            }
+            
+            function createCategoryZip(category, files) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        const zip = new JSZip();
+                        
+                        // Add each file to the zip
+                        files.forEach(file => {
+                            zip.file(file.name, file.content);
+                        });
+                        
+                        // Generate the zip
+                        zip.generateAsync({
+                            type: 'blob',
+                            compression: 'DEFLATE',
+                            compressionOptions: { level: 6 }
+                        }).then(function(content) {
+                            // Store the zip blob
+                            resultZips[category] = {
+                                blob: content,
+                                count: files.length,
+                                size: content.size
+                            };
+                            resolve();
+                        }).catch(reject);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            }
+            
+            function updateProgress(percent, message) {
+                progressBar.style.width = percent + '%';
+                progressBar.textContent = percent + '%';
+                progressBar.setAttribute('aria-valuenow', percent);
+                
+                if (message) {
+                    processingMessage.textContent = message;
+                }
+                
+                if (percent === 100) {
+                    processingStatus.textContent = 'Elaborazione completata';
+                }
+            }
+            
+            function showResults() {
+                resultContainers.innerHTML = '';
+                
+                for (const category in fileCategories) {
+                    if (resultZips[category] && resultZips[category].count > 0) {
+                        const categoryInfo = fileCategories[category];
+                        const resultZip = resultZips[category];
+                        
+                        const col = document.createElement('div');
+                        col.className = 'col-md-6 col-lg-3 mb-3';
+                        
+                        const card = document.createElement('div');
+                        card.className = 'card h-100';
+                        
+                        const cardBody = document.createElement('div');
+                        cardBody.className = 'card-body text-center';
+                        
+                        const icon = document.createElement('i');
+                        icon.className = `fas ${categoryInfo.icon} text-${categoryInfo.color} mb-3`;
+                        icon.style.fontSize = '3rem';
+                        
+                        const title = document.createElement('h5');
+                        title.className = 'card-title';
+                        title.textContent = categoryInfo.title;
+                        
+                        const fileCount = document.createElement('p');
+                        fileCount.className = 'card-text';
+                        fileCount.textContent = `${resultZip.count} file (${formatFileSize(resultZip.size)})`;
+                        
+                        const downloadBtn = document.createElement('button');
+                        downloadBtn.className = `btn btn-${categoryInfo.color} mt-3`;
+                        downloadBtn.innerHTML = `<i class="fas fa-download me-2"></i> Scarica`;
+                        downloadBtn.addEventListener('click', () => {
+                            saveAs(resultZip.blob, `${categoryInfo.title}.zip`);
+                        });
+                        
+                        cardBody.appendChild(icon);
+                        cardBody.appendChild(title);
+                        cardBody.appendChild(fileCount);
+                        cardBody.appendChild(downloadBtn);
+                        
+                        card.appendChild(cardBody);
+                        col.appendChild(card);
+                        
+                        resultContainers.appendChild(col);
+                    }
+                }
+                
+                // If no results
+                if (resultContainers.children.length === 0) {
+                    const noResults = document.createElement('div');
+                    noResults.className = 'col-12 text-center';
+                    noResults.innerHTML = `
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Nessun file trovato nel file ZIP o il file ZIP è vuoto.
+                        </div>
+                    `;
+                    resultContainers.appendChild(noResults);
+                }
+                
+                // Show results panel
+                mainPanel.style.display = 'none';
+                processingPanel.style.display = 'none';
+                resultPanel.style.display = 'block';
+                
+                processing = false;
+            }
+            
+            function resetApp() {
+                clearSelectedFile();
+                mainPanel.style.display = 'block';
+                processingPanel.style.display = 'none';
+                resultPanel.style.display = 'none';
+                progressBar.style.width = '0%';
+                progressBar.textContent = '0%';
+                progressBar.setAttribute('aria-valuenow', 0);
+                processingMessage.textContent = 'Inizializzazione dell\'elaborazione...';
+                processing = false;
+            }
+            
+            // Window events
+            window.addEventListener('beforeunload', function(e) {
+                if (processing) {
+                    const message = 'L\'elaborazione è in corso. Sei sicuro di voler abbandonare la pagina?';
+                    e.returnValue = message;
+                    return message;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

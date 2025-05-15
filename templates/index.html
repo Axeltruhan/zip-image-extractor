@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary bg-opacity-25">
+                <h4 class="card-title mb-0">
+                    <i class="fas fa-filter me-2"></i>
+                    ZIP File Media Separator
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Upload a ZIP file containing various files. The application will:
+                </p>
+                <ul class="list-group list-group-flush mb-4">
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Extract all files from your ZIP
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Categorize files by media type (images, audio, video, other)
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Create separate ZIP files for each media type
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Allow you to download each category as a separate ZIP
+                    </li>
+                </ul>
+
+                <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data" id="upload-form">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Seleziona un file ZIP da processare:</label>
+                        <input type="file" class="form-control" id="file" name="file" accept=".zip" required>
+                        <div class="form-text">Solo file ZIP sono supportati (.zip)</div>
+                    </div>
+                    
+                    <!-- Progress area (inizialmente nascosta) -->
+                    <div class="d-none" id="upload-progress-area">
+                        <div class="progress mb-3" style="height: 25px;">
+                            <div id="upload-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+                                 role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                        </div>
+                        <p class="text-center" id="upload-status">Preparazione caricamento...</p>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary" id="upload-btn">
+                            <i class="fas fa-upload me-2"></i>
+                            Carica e Processa
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-info bg-opacity-25">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Supported File Types
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-image text-primary me-2"></i>Images</h6>
+                        <ul class="list-unstyled ps-4">
+                            <li>JPG/JPEG</li>
+                            <li>PNG</li>
+                            <li>GIF</li>
+                            <li>BMP</li>
+                            <li>WebP</li>
+                            <li>SVG</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-music text-success me-2"></i>Audio</h6>
+                        <ul class="list-unstyled ps-4">
+                            <li>MP3</li>
+                            <li>WAV</li>
+                            <li>OGG</li>
+                            <li>AAC</li>
+                            <li>FLAC</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-video text-danger me-2"></i>Video</h6>
+                        <ul class="list-unstyled ps-4">
+                            <li>MP4</li>
+                            <li>AVI</li>
+                            <li>MOV</li>
+                            <li>WMV</li>
+                            <li>MKV</li>
+                            <li>WebM</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

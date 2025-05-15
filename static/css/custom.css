@@ -1,0 +1,77 @@
+/* Custom styles to enhance the application */
+
+/* Add smooth transitions */
+.btn, .alert, .card {
+    transition: all 0.3s ease;
+}
+
+/* Enhance card hover effect */
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Make upload button more prominent */
+#upload-btn {
+    padding: 0.75rem 1.25rem;
+    font-weight: 500;
+}
+
+/* Style for the footer */
+.footer {
+    margin-top: 3rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--bs-gray-800);
+}
+
+/* File type icons in the results table */
+.table i {
+    width: 20px;
+    text-align: center;
+}
+
+/* Improved spacing for better readability */
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Ensure table is responsive on mobile */
+.table-responsive {
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
+    overflow: hidden;
+}
+
+/* Custom styling for alert messages */
+.alert {
+    border-left: 4px solid transparent;
+}
+.alert-success {
+    border-left-color: var(--bs-success);
+}
+.alert-danger {
+    border-left-color: var(--bs-danger);
+}
+.alert-warning {
+    border-left-color: var(--bs-warning);
+}
+.alert-info {
+    border-left-color: var(--bs-info);
+}
+
+/* Add some space below headings */
+h4, h5, h6 {
+    margin-bottom: 1rem;
+}
+
+/* Style the file input */
+.form-control[type="file"] {
+    padding: 0.75rem 1rem;
+}
+
+/* Add a background pattern to the page */
+body {
+    background-color: var(--bs-dark);
+    background-image: radial-gradient(var(--bs-gray-800) 1px, transparent 1px);
+    background-size: 25px 25px;
+}

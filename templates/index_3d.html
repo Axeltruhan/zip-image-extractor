@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="it" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZIP Media Separator - Home</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .content-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            z-index: 1;
+        }
+        
+        .navbar {
+            background-color: rgba(20, 20, 20, 0.8) !important;
+            backdrop-filter: blur(10px);
+        }
+        
+        .content-section {
+            padding: 80px 0;
+        }
+        
+        .hero-section {
+            padding-top: 120px;
+            padding-bottom: 80px;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-shadow: 0 0 15px rgba(0, 150, 255, 0.7);
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(0, 150, 255, 0.5);
+        }
+        
+        .card {
+            background-color: rgba(30, 30, 30, 0.8);
+            border: none;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .upload-btn {
+            margin-top: 15px;
+            padding: 15px 35px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.5);
+        }
+        
+        .features-section {
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+        
+        .footer {
+            background-color: rgba(10, 10, 10, 0.8);
+            padding: 30px 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .transparent-bg {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .upload-card {
+            background: linear-gradient(145deg, rgba(40, 40, 40, 0.8), rgba(20, 20, 20, 0.8));
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .form-control {
+            background-color: rgba(50, 50, 50, 0.6);
+            border: 1px solid rgba(100, 100, 100, 0.3);
+            color: #fff;
+        }
+        
+        .form-control:focus {
+            background-color: rgba(60, 60, 60, 0.7);
+            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+        }
+        
+        .progress {
+            height: 25px;
+            background-color: rgba(40, 40, 40, 0.5);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <div class="content-wrapper">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand fw-bold" href="/">
+                    <i class="fas fa-file-archive me-2"></i>
+                    ZIP Media Separator
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/download-app">
+                                <i class="fas fa-download me-1"></i> Download
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10 transparent-bg">
+                        <h1 class="hero-title">ZIP Media Separator</h1>
+                        <p class="hero-subtitle">Separa i tuoi file multimediali in categorie con un solo click</p>
+                        <p class="hero-subtitle mt-2">
+                            <a href="/download-app" class="btn btn-success btn-sm px-3">
+                                <i class="fas fa-download me-2"></i>Scarica gratuitamente la nostra app
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Upload Section -->
+        <section class="content-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="upload-card">
+                            <h2 class="text-center mb-4">Carica il tuo file ZIP</h2>
+                            
+                            <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data" id="upload-form">
+                                <div class="mb-4">
+                                    <label for="file" class="form-label">Seleziona un file ZIP da processare:</label>
+                                    <input type="file" class="form-control form-control-lg" id="file" name="file" accept=".zip" required>
+                                    <div class="form-text text-light opacity-75">Solo file ZIP sono supportati (.zip)</div>
+                                </div>
+                                
+                                <!-- Progress area (inizialmente nascosta) -->
+                                <div class="d-none mt-4" id="upload-progress-area">
+                                    <div class="progress mb-3">
+                                        <div id="upload-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+                                             role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                    </div>
+                                    <p class="text-center" id="upload-status">Preparazione caricamento...</p>
+                                </div>
+                                
+                                <div class="d-grid gap-2 mt-4">
+                                    <button type="submit" class="btn btn-primary upload-btn" id="upload-btn">
+                                        <i class="fas fa-upload me-2"></i>
+                                        Carica e Processa
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Features Section -->
+        <section class="content-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="features-section">
+                            <h2 class="text-center mb-5">Funzionalità</h2>
+                            
+                            <div class="row">
+                                <div class="col-md-6 col-lg-3 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center py-4">
+                                            <i class="fas fa-upload feature-icon" style="color: #4285F4;"></i>
+                                            <h5 class="card-title">Caricamento Semplice</h5>
+                                            <p class="card-text">Carica i tuoi file ZIP direttamente dal browser con pochi click.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 col-lg-3 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center py-4">
+                                            <i class="fas fa-th feature-icon" style="color: #DB4437;"></i>
+                                            <h5 class="card-title">Categorizzazione Intelligente</h5>
+                                            <p class="card-text">Riconoscimento automatico di formati di file e categorizzazione per tipo.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 col-lg-3 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center py-4">
+                                            <i class="fas fa-box-archive feature-icon" style="color: #F4B400;"></i>
+                                            <h5 class="card-title">File ZIP Separati</h5>
+                                            <p class="card-text">File risultanti organizzati in archivi ZIP separati pronti per il download.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 col-lg-3 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center py-4">
+                                            <i class="fas fa-desktop feature-icon" style="color: #0F9D58;"></i>
+                                            <h5 class="card-title">App Desktop</h5>
+                                            <p class="card-text">Versione scaricabile per processare file anche in locale, senza limiti di dimensione.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Supported Formats Section -->
+        <section class="content-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="transparent-bg">
+                            <h2 class="text-center mb-4">Formati supportati</h2>
+                            
+                            <div class="row mt-4">
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-center">
+                                                <i class="fas fa-image me-2" style="color: #4285F4;"></i>
+                                                Immagini
+                                            </h5>
+                                            <div class="d-flex flex-wrap justify-content-center mt-3">
+                                                <span class="badge bg-secondary m-1 px-2 py-1">JPG/JPEG</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">PNG</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">GIF</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">BMP</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">WebP</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">SVG</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">TIFF</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-center">
+                                                <i class="fas fa-music me-2" style="color: #DB4437;"></i>
+                                                Audio
+                                            </h5>
+                                            <div class="d-flex flex-wrap justify-content-center mt-3">
+                                                <span class="badge bg-secondary m-1 px-2 py-1">MP3</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">WAV</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">OGG</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">AAC</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">FLAC</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">AIFF</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">WMA</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-center">
+                                                <i class="fas fa-video me-2" style="color: #F4B400;"></i>
+                                                Video
+                                            </h5>
+                                            <div class="d-flex flex-wrap justify-content-center mt-3">
+                                                <span class="badge bg-secondary m-1 px-2 py-1">MP4</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">AVI</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">MOV</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">WMV</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">MKV</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">WebM</span>
+                                                <span class="badge bg-secondary m-1 px-2 py-1">3GP</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA Section -->
+        <section class="content-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 text-center">
+                        <div class="transparent-bg">
+                            <h2 class="mb-4">Prova l'app desktop per file di grandi dimensioni</h2>
+                            <p class="lead mb-4">
+                                Per processare file ZIP di grandi dimensioni (>4GB) senza limitazioni, 
+                                scarica la nostra applicazione desktop gratuita.
+                            </p>
+                            <a href="/download-app" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-download me-2"></i> Scarica l'app
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <p>ZIP Media Separator &copy; 2025 - Tutti i diritti riservati</p>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    
+    <!-- Three.js Animation -->
+    <script>
+        // Inizializzazione di Three.js
+        let scene, camera, renderer;
+        let cubes = [];
+        let particleSystem;
+        
+        function init() {
+            // Creazione della scena
+            scene = new THREE.Scene();
+            
+            // Creazione della camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 30;
+            
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000814, 1);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+            
+            // Luci
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+            
+            const pointLight = new THREE.PointLight(0x4285F4, 2, 100);
+            pointLight.position.set(10, 10, 10);
+            scene.add(pointLight);
+            
+            const pointLight2 = new THREE.PointLight(0x0F9D58, 2, 100);
+            pointLight2.position.set(-10, -10, 10);
+            scene.add(pointLight2);
+            
+            // Cubo per rappresentare un file ZIP
+            createCubes();
+            
+            // Sistema di particelle
+            createParticleSystem();
+            
+            // Event listener per ridimensionamento finestra
+            window.addEventListener('resize', onWindowResize, false);
+            
+            // Avvia l'animazione
+            animate();
+        }
+        
+        function createCubes() {
+            // Materiali per diversi tipi di file
+            const materials = [
+                new THREE.MeshPhongMaterial({ color: 0x4285F4, flatShading: true }), // Blu - immagini
+                new THREE.MeshPhongMaterial({ color: 0xDB4437, flatShading: true }), // Rosso - video
+                new THREE.MeshPhongMaterial({ color: 0xF4B400, flatShading: true }), // Giallo - audio
+                new THREE.MeshPhongMaterial({ color: 0x0F9D58, flatShading: true })  // Verde - altri
+            ];
+            
+            // Crea diversi cubi
+            for (let i = 0; i < 20; i++) {
+                const cubeGeometry = new THREE.BoxGeometry(2, 2, 2);
+                const material = materials[Math.floor(Math.random() * materials.length)];
+                const cube = new THREE.Mesh(cubeGeometry, material);
+                
+                // Posizione casuale
+                cube.position.x = (Math.random() - 0.5) * 40;
+                cube.position.y = (Math.random() - 0.5) * 40;
+                cube.position.z = (Math.random() - 0.5) * 40;
+                
+                // Rotazione casuale
+                cube.rotation.x = Math.random() * Math.PI;
+                cube.rotation.y = Math.random() * Math.PI;
+                
+                // Velocità di rotazione casuale
+                cube.userData = {
+                    rotationSpeed: {
+                        x: (Math.random() - 0.5) * 0.02,
+                        y: (Math.random() - 0.5) * 0.02
+                    }
+                };
+                
+                scene.add(cube);
+                cubes.push(cube);
+            }
+        }
+        
+        function createParticleSystem() {
+            // Geometria delle particelle
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particleCount = 1000;
+            
+            const positions = new Float32Array(particleCount * 3);
+            
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                positions[i3] = (Math.random() - 0.5) * 50;
+                positions[i3 + 1] = (Math.random() - 0.5) * 50;
+                positions[i3 + 2] = (Math.random() - 0.5) * 50;
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            
+            // Materiale delle particelle
+            const particlesMaterial = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 0.1,
+                transparent: true,
+                opacity: 0.5
+            });
+            
+            // Sistema di particelle
+            particleSystem = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particleSystem);
+        }
+        
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Rotazione dei cubi
+            cubes.forEach(cube => {
+                cube.rotation.x += cube.userData.rotationSpeed.x;
+                cube.rotation.y += cube.userData.rotationSpeed.y;
+            });
+            
+            // Rotazione lenta della telecamera
+            camera.position.x = 30 * Math.sin(Date.now() * 0.0001);
+            camera.position.z = 30 * Math.cos(Date.now() * 0.0001);
+            camera.lookAt(scene.position);
+            
+            // Rotazione del sistema di particelle
+            particleSystem.rotation.y += 0.001;
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Inizializza la scena quando la pagina è caricata
+        window.onload = init;
+    </script>
+</body>
+</html>

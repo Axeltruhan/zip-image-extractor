@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success bg-opacity-25">
+                <h4 class="card-title mb-0">
+                    <i class="fas fa-check-circle me-2"></i>
+                    Processing Complete
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Your ZIP file <strong>{{ results.source.name }}</strong> 
+                    ({{ results.source.size }}) has been processed successfully.
+                </p>
+                <p>The contents have been categorized into the following groups:</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Category</th>
+                                <th>Files Found</th>
+                                <th>Output Size</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <i class="fas fa-image text-primary me-2"></i>
+                                    Images
+                                </td>
+                                <td>{{ results.images.count }}</td>
+                                <td>{{ results.images.size }}</td>
+                                <td>
+                                    {% if results.images.count > 0 %}
+                                    <a href="{{ url_for('download', file_type='images') }}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-download me-1"></i> Download
+                                    </a>
+                                    {% else %}
+                                    <span class="badge bg-secondary">No files</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i class="fas fa-music text-success me-2"></i>
+                                    Audio Files
+                                </td>
+                                <td>{{ results.audio.count }}</td>
+                                <td>{{ results.audio.size }}</td>
+                                <td>
+                                    {% if results.audio.count > 0 %}
+                                    <a href="{{ url_for('download', file_type='audio') }}" class="btn btn-success btn-sm">
+                                        <i class="fas fa-download me-1"></i> Download
+                                    </a>
+                                    {% else %}
+                                    <span class="badge bg-secondary">No files</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i class="fas fa-video text-danger me-2"></i>
+                                    Video Files
+                                </td>
+                                <td>{{ results.video.count }}</td>
+                                <td>{{ results.video.size }}</td>
+                                <td>
+                                    {% if results.video.count > 0 %}
+                                    <a href="{{ url_for('download', file_type='video') }}" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-download me-1"></i> Download
+                                    </a>
+                                    {% else %}
+                                    <span class="badge bg-secondary">No files</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i class="fas fa-file-alt text-info me-2"></i>
+                                    Other Files
+                                </td>
+                                <td>{{ results.others.count }}</td>
+                                <td>{{ results.others.size }}</td>
+                                <td>
+                                    {% if results.others.count > 0 %}
+                                    <a href="{{ url_for('download', file_type='others') }}" class="btn btn-info btn-sm">
+                                        <i class="fas fa-download me-1"></i> Download
+                                    </a>
+                                    {% else %}
+                                    <span class="badge bg-secondary">No files</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Process Another ZIP File
+                    </a>
+                    <a href="{{ url_for('cleanup') }}" class="btn btn-outline-danger">
+                        <i class="fas fa-trash me-2"></i>
+                        Clean Up Files
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-info mt-4">
+            <i class="fas fa-info-circle me-2"></i>
+            Temporary files will be automatically cleaned up when you process another ZIP file or click the "Clean Up Files" button.
+        </div>
+    </div>
+</div>
+{% endblock %}
